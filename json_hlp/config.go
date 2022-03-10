@@ -34,14 +34,14 @@ type ConfigNode struct {
 }
 
 func (base *ConfigNode) Define(name string, def interface{}) (interface{}, bool) {
-	if len(name) == 0 || base.m_main == nil || base.m_main.m_doc == nil {
+	if len(name) == 0 || base.m_main == nil || base.m_value == nil || base.m_default_value == nil {
 		return nil, false
 	}
 
 	base.m_main.m_mutex.Lock()
 	defer base.m_main.m_mutex.Unlock()
 
-	if _, ok := base.m_main.m_doc.(map[string]interface{})[name]; !ok {
+	if _, ok := base.m_value.(map[string]interface{})[name]; !ok {
 		if def != nil {
 			base.m_value.(map[string]interface{})[name] = def
 			base.m_default_value.(map[string]interface{})[name] = def
@@ -52,10 +52,12 @@ func (base *ConfigNode) Define(name string, def interface{}) (interface{}, bool)
 			node_default := make(map[string]interface{})
 			base.m_value.(map[string]interface{})[name] = node
 			base.m_default_value.(map[string]interface{})[name] = node_default
-			base.m_main.setmodify()
-			base.m_value = node
-			base.m_default_value = node_default
-			return base, true
+			cbase := new(ConfigNode)
+			cbase.m_main = base.m_main
+			cbase.m_main.setmodify()
+			cbase.m_value = node
+			cbase.m_default_value = node_default
+			return cbase, true
 		}
 	}
 

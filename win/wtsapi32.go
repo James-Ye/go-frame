@@ -82,6 +82,7 @@ var (
 	wTSEnumerateSessionsW       *windows.LazyProc
 	wTSQueryUserToken           *windows.LazyProc
 	wTSQuerySessionInformationW *windows.LazyProc
+	wTSFreeMemory               *windows.LazyProc
 )
 
 func init() {
@@ -91,6 +92,7 @@ func init() {
 	wTSEnumerateSessionsW = libWtsapi32.NewProc("WTSEnumerateSessionsW")
 	wTSQueryUserToken = libWtsapi32.NewProc("WTSQueryUserToken")
 	wTSQuerySessionInformationW = libWtsapi32.NewProc("WTSQuerySessionInformationW")
+	wTSFreeMemory = libWtsapi32.NewProc("WTSFreeMemory")
 
 }
 
@@ -118,8 +120,7 @@ func WTSEnumerateSessions(hServer windows.Handle, Reserved uint32, Version uint3
 }
 
 func WTSQuerySessionInformation(hServer windows.Handle, SessionId uint32, WTSInfoClass WTS_INFO_CLASS) (*byte, int, bool) {
-	var Buffer []byte
-	pBuffer := &Buffer[0]
+	var pBuffer *byte
 	var BytesReturned uint32 = 0
 	r, _, _ := syscall.Syscall6(wTSQuerySessionInformationW.Addr(), 5,
 		uintptr(hServer),
@@ -130,4 +131,11 @@ func WTSQuerySessionInformation(hServer windows.Handle, SessionId uint32, WTSInf
 		0)
 
 	return pBuffer, int(BytesReturned), r != 0
+}
+
+func WTSFreeMemory(pMemory uintptr) {
+	syscall.Syscall(wTSFreeMemory.Addr(), 1,
+		pMemory,
+		0,
+		0)
 }

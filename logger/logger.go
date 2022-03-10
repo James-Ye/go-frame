@@ -3,16 +3,14 @@ package logger
 import (
 	"io"
 	"os"
-
-	"github.com/James-Ye/go-frame/path_mgr"
 )
 
 var logfile string
 
 func Init(appname string) {
-	appPath := path_mgr.GetAppPath()
-
-	logfile = appPath
+	logfile = "C:\\ProgramData\\"
+	logfile += "\\"
+	logfile += appname
 	logfile += "\\log_"
 	logfile += appname
 	logfile += ".log"

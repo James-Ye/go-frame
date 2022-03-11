@@ -86,7 +86,7 @@ func (l *log) log(level uint32, format string, a ...interface{}) {
 	}
 }
 
-func setpath(appname string) {
+func Setpath(appname string) {
 	GetInstance().setpath(appname)
 }
 

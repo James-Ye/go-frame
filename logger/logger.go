@@ -42,7 +42,7 @@ func (l *log) setpath(logpath string) {
 	l.logfile = logpath
 }
 
-func (l *log) SetLevel(level uint32) {
+func (l *log) setLevel(level uint32) {
 	l.level = level
 }
 
@@ -86,8 +86,12 @@ func (l *log) log(level uint32, format string, a ...interface{}) {
 	}
 }
 
-func Setpath(appname string) {
+func SetPath(appname string) {
 	GetInstance().setpath(appname)
+}
+
+func SetLevel(level LEVEL) {
+	GetInstance().setLevel(level)
 }
 
 func Trace(format string, a ...interface{}) {

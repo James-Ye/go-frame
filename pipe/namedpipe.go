@@ -13,7 +13,7 @@ type CloseWriter interface {
 	CloseWrite() error
 }
 
-type callbackFunc func(uintptr, string, interface{})
+type callbackFunc func(string, interface{})
 
 func Receive(pipeFile string, control chan bool, listenerDone chan bool, pfun callbackFunc) {
 	c := gw.PipeConfig{
@@ -47,7 +47,7 @@ func Receive(pipeFile string, control chan bool, listenerDone chan bool, pfun ca
 			}
 
 			command := string(bytes[:])
-			pfun(0, command, conn)
+			pfun(command, conn)
 		}
 
 		close(listenerDone)

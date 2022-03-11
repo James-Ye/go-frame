@@ -71,8 +71,35 @@ func W2CA(p *uint16, size int) []uint8 {
 	n := 0
 	offset := 8 * step2
 
-	for *((*uint8)(end)) != 0 && n < size*4 {
-		chars[n] = uint8((*((*uint8)(end))) >> offset)
+	for *((*uint16)(end)) != 0 && n < size*2 {
+		chars[n] = uint8((*((*uint16)(end))) >> offset)
+		if offset == 0 {
+			offset = 8 * step2
+			end = PointerStepIn(end, step2)
+		} else {
+			offset -= 8 * step
+			n++
+		}
+	}
+
+	return chars
+}
+
+func ULong2CA(p *uint32, size int) []byte {
+	var chars []byte
+	if p == nil {
+		return chars
+	}
+
+	end := unsafe.Pointer(p)
+	step := unsafe.Sizeof(chars[0])
+	step2 := unsafe.Sizeof(*p)
+
+	n := 0
+	offset := 8 * step2
+
+	for *((*uint32)(end)) != 0 && n < size*4 {
+		chars[n] = uint8((*((*uint32)(end))) >> offset)
 		if offset == 0 {
 			offset = 8 * step2
 			end = PointerStepIn(end, step2)

@@ -1,7 +1,6 @@
 package json_hlp
 
 import (
-	"fmt"
 	"reflect"
 	"strings"
 	"sync"
@@ -228,13 +227,11 @@ func (main *ConfigMain) load(size int) {
 	defer main.m_mutex.Unlock()
 
 	if m, ok := main.loadbin(size); ok {
-		fmt.Println("load ok")
-		fmt.Println(main)
+		logger.Trace("load ok")
 		doc := main.m_doc.(map[string]interface{})
 		MergeMap(&(doc), m.(map[string]interface{}))
-		fmt.Println(main)
 	} else {
-		fmt.Println("load fail")
+		logger.Trace("load fail, create it")
 		main.m_doc = make(map[string]interface{})
 		main.m_default = make(map[string]interface{})
 	}

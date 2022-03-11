@@ -2,4 +2,7 @@ module github.com/James-Ye/go-frame
 
 go 1.17
 
-require golang.org/x/sys v0.0.0-20220307203707-22a9840ba4d7
+require (
+	github.com/Microsoft/go-winio v0.5.2
+	golang.org/x/sys v0.0.0-20220310020820-b874c991c1a5
+)

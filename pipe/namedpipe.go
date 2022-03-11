@@ -15,7 +15,7 @@ type CloseWriter interface {
 
 type callbackFunc func(uintptr, string, interface{})
 
-func Receivelas(pipeFile string, control chan bool, listenerDone chan bool, pfun callbackFunc) {
+func Receive(pipeFile string, control chan bool, listenerDone chan bool, pfun callbackFunc) {
 	c := gw.PipeConfig{
 		MessageMode:      true,  // Use message mode so that CloseWrite() is supported
 		InputBufferSize:  65536, // Use 64KB buffers to improve performance
@@ -23,7 +23,7 @@ func Receivelas(pipeFile string, control chan bool, listenerDone chan bool, pfun
 	}
 	l, err := gw.ListenPipe(pipeFile, &c)
 	if err != nil {
-		logger.Trace("监听失败")
+		logger.Trace("Listen fail")
 	}
 	defer l.Close()
 
@@ -31,9 +31,9 @@ func Receivelas(pipeFile string, control chan bool, listenerDone chan bool, pfun
 		for {
 			// server echo
 			conn, e := l.Accept()
-			logger.Trace("Accept接收到信息")
+			logger.Trace("Accept recieve information")
 			if e != nil {
-				logger.Trace("Accept接收信息失败")
+				logger.Trace("Accept recieve information fail")
 				break
 			}
 			defer conn.Close()
